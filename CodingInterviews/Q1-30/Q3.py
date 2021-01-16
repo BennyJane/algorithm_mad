@@ -24,5 +24,7 @@ def Solution(s: str):
 
 if __name__ == '__main__':
     s = "alolobo"
-    r = Solution(s)
-    print(r)
+    print(Solution(s))
+
+    s = "ooaloloskdjlo"
+    print(Solution(s))

@@ -5,10 +5,14 @@
 """
 =================================================================================
 【喊7的次数重排】【重点】
+N个人围成一圈，按照顺时针从1到N编号，编号为1的人开始喊数，从1到7，当喊道7的倍数或数字本身含有7的话，
+不能把这个数字直接喊出来，而是要喊 过 ；
+
 =================================================================================
 """
 
 
+# FIXME 没有考虑包含数字7的情况， 只考虑7的倍数的情况
 def Solution(s: str):
     l = s.split()
     _len = len(l)
@@ -21,7 +25,31 @@ def Solution(s: str):
     return " ".join([str(i) for i in res])
 
 
+def Solution2(s: str):
+    """使用哈希表记录7的倍数或者包含7的数字在各个位置上出现的频率"""
+    l = [int(i) for i in s.split()]  # 需要先将数据转为数值类型
+    _count = len(l)  # 总长度： 圆圈的长度，总人数
+    d = dict([(i, 0) for i in range(len(l))])  # 用各个索引作为键
+    sum_count = sum(l)
+    current_count = 0   # 记录满足7倍数以及包含7的出现次数
+    for n in range(1, 201):
+        if '7' in str(n) or n % 7 == 0:
+            position = n % _count - 1  # 余数转索引
+            d[position] += 1
+            current_count += 1
+        if current_count >= sum_count:
+            break
+    for key, value in d.items():
+        l[key] = value
+    return l
+
+
 if __name__ == '__main__':
     ori = '0 1 0'
-    res = Solution(ori)
-    print(res)
+    ori = '0 1 1'
+    print(Solution(ori))
+
+    ori2 = '0 1 1'
+    print(Solution2(ori2))
+    ori2 = '0 1 2'
+    print(Solution2(ori2))

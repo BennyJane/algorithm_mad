@@ -3,18 +3,23 @@
 # Warning    ：The Hard Way Is Easier
 """
 =================================================================================
-【猜数字】【重要】
+【寻找相同子串】
+规则字符串的下标从1开始
 =================================================================================
 """
 
 
-def Solution(ori: list, num: int):
-    return
+def Solution(t: str, p: str):
+    p_length = len(p)
+    for i in range(len(t)):
+        t_temp = t[i: i + p_length]
+        if t_temp == p:
+            return i + 1
+    return "No"
 
 
 if __name__ == '__main__':
-    s1 = "2,5,6,7,9,5,7"
-    s2 = "1,7,4,3,4"
-    ori_list = [s1.split(","), s2.split(",")]
-    r = Solution(ori_list, num=3)
+    s1 = "AVERDXIVYERDIAN"
+    s2 = "RDXI"
+    r = Solution(s1, s2)
     print(r)
