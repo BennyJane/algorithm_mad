@@ -8,28 +8,29 @@
 """
 
 
-def Solution(ori: list, k: int):
-    d = {}
-    for n in ori:
-        if n in d:
-            d[n] += 1
-        else:
-            d[n] = 1
-    type_num = len(d.keys())  # 手机种类
-    type_count = [value for value in d.values()]
-    type_count.sort(reverse=True)
-    for _count in type_count:
-        k -= _count
-        if k >= 0:
-            type_num -= 1
-        else:
-            break
-    return type_num
+def Solution(end: int):
+    res = []
+
+    def is_prime(n):
+        # 判断是否为素数
+        return n > 1 and all(n % d for d in range(2, int(n ** 0.5) + 1))
+
+    def reverse(x):
+        return int(str(x)[::-1])
+
+    def reverse2(x):
+        rev_num = 0
+        while x:
+            rev_num = rev_num * 10 + x % 10
+            x /= 10
+        return rev_num
+
+    for i in range(1, end + 1):
+        if is_prime(i) and i == reverse(i):
+            res.append(i)
+    return len(res), res
 
 
 if __name__ == '__main__':
-    s = [5, 1, 1, 2, 2, 2]
-    print(Solution(s, k=2))
-
-    s = [5, 1, 1, 2, 2, 2, 4, 4, 5, 5, 1, 2, ]
-    print(Solution(s, 7))
+    end = 50
+    print(Solution(end))

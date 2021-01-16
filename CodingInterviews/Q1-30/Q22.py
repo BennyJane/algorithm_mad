@@ -8,28 +8,37 @@
 """
 
 
-def Solution(ori: list, k: int):
-    d = {}
-    for n in ori:
-        if n in d:
-            d[n] += 1
-        else:
-            d[n] = 1
-    type_num = len(d.keys())  # 手机种类
-    type_count = [value for value in d.values()]
-    type_count.sort(reverse=True)
-    for _count in type_count:
-        k -= _count
-        if k >= 0:
-            type_num -= 1
-        else:
-            break
-    return type_num
+def Solution(ori: list):
+    import string
+    words = string.ascii_lowercase  # 需要记住
+    _len = len(words)
+
+    def move_n(index):  # 参考斐波那契数列
+        s = [1, 2, 4]
+        if index < 3:
+            return s
+        i = 3
+        while i <= index:
+            temp = s[i - 1] + s[i - 2] + s[i - 3]
+            s.append(temp)
+            i += 1
+        return s
+
+    str_length = len(ori)
+    move_nums = move_n(str_length)
+    res = []
+    for index, w in enumerate(ori):
+        move_num = move_nums[index]
+        start_index = words.index(w)
+        end_index = start_index + move_num
+        end_word = words[(end_index % _len)]
+        res.append(end_word)
+    return "".join(res)
 
 
 if __name__ == '__main__':
-    s = [5, 1, 1, 2, 2, 2]
-    print(Solution(s, k=2))
+    s = "xy"
+    print(Solution(s))
 
-    s = [5, 1, 1, 2, 2, 2, 4, 4, 5, 5, 1, 2, ]
-    print(Solution(s, 7))
+    s = "abcde"
+    print(Solution(s))
