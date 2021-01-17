@@ -32,3 +32,27 @@ print("[赋值字符串 * 0]", "1" * 0)
 """
 n = 100
 print("[十进制转2进程]：", bin(n).replace("0b", ""))
+
+"""
+==================================================================================
+函数调用细节
+max(iter, key=f)
+sys.stdin.readline()
+reversed(iter)
+==================================================================================
+"""
+l = ["a", "abc", "ab", "abcd"]
+_max = max(l, key=len)
+print("[max 自定义比较函数]： 返回原数据", _max)
+print("[max 自定义比较函数]： 返回原数据的长度", len(_max))
+
+# import sys
+#
+# s = sys.stdin  # 阻塞： 等待输入
+# print("s", s.readline())  # readline() 获取输入的内容
+# s2 = sys.stdin.readline()  # 直接获取输入的内容
+# print("s2", s2)
+
+res = reversed(l)
+print("[reversed()的返回值是迭代器]", res)
+print("[reversed()的返回值=》转列表]", list(res))
