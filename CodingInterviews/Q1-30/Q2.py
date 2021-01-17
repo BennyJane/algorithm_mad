@@ -30,8 +30,8 @@ def Solution2(s: str):
     l = [int(i) for i in s.split()]  # 需要先将数据转为数值类型
     _count = len(l)  # 总长度： 圆圈的长度，总人数
     d = dict([(i, 0) for i in range(len(l))])  # 用各个索引作为键
-    sum_count = sum(l)
-    current_count = 0   # 记录满足7倍数以及包含7的出现次数
+    sum_count = sum(l)  # 求总共出现了多少 ‘过’
+    current_count = 0  # 记录满足7倍数以及包含7的出现次数
     for n in range(1, 201):
         if '7' in str(n) or n % 7 == 0:
             position = n % _count - 1  # 余数转索引
@@ -44,6 +44,23 @@ def Solution2(s: str):
     return l
 
 
+def Solution3(s: str):
+    l = list(map(int, s.split()))
+    n = len(l)  # N
+    _count = sum(l)
+    d = [0 for _ in range(n)]  # 记录每个位置喊 过 的次数
+
+    start = 1
+    cur_count = 0
+    while cur_count < _count:   # 出现的次数为限制条件
+        if start % 7 == 0 or '7' in str(start):
+            index = start % n - 1
+            d[index] += 1
+            cur_count += 1
+        start += 1
+    return " ".join(map(str, d))
+
+
 if __name__ == '__main__':
     ori = '0 1 0'
     ori = '0 1 1'
@@ -53,3 +70,6 @@ if __name__ == '__main__':
     print(Solution2(ori2))
     ori2 = '0 1 2'
     print(Solution2(ori2))
+
+    ori2 = '0 1 2'
+    print(Solution3(ori2))

@@ -8,13 +8,20 @@
 """
 
 
-def Solution(ori: list, num: int):
-    return
+def Solution(s: str, start: int, end: int):
+    s_l = s.split()
+    left = s_l[:start]
+    mid = s_l[start: end + 1]
+    right = s_l[end + 1:]
+    # 数据倒排
+    mid.reverse()
+    #  reversed() 返回一个迭代器，需要转化为列表
+    # mid = list(reversed(mid))
+    # mid = mid[::-1]
+    res = left + mid + right
+    return " ".join(res)
 
 
 if __name__ == '__main__':
-    s1 = "2,5,6,7,9,5,7"
-    s2 = "1,7,4,3,4"
-    ori_list = [s1.split(","), s2.split(",")]
-    r = Solution(ori_list, num=3)
-    print(r)
+    s1 = "I am a developer."
+    print(Solution(s1, start=0, end=3))

@@ -8,13 +8,17 @@
 """
 
 
-def Solution(ori: list, num: int):
-    return
+# 需要去重
+def Solution(l: list, n: int):
+    l = list(set(l))  # 去重
+    if 2 * n > len(l):
+        return -1
+    l.sort()
+    res = l[:n] + l[-1 * n:]
+    return sum(res)
 
 
 if __name__ == '__main__':
-    s1 = "2,5,6,7,9,5,7"
-    s2 = "1,7,4,3,4"
-    ori_list = [s1.split(","), s2.split(",")]
-    r = Solution(ori_list, num=3)
-    print(r)
+    s1 = [95, 88, 83, 64, 100]
+    print(Solution(s1, 2))
+

@@ -3,19 +3,24 @@
 # Warning    ：The Hard Way Is Easier
 """
 =================================================================================
-【素数之和】
+【素数之积】
 =================================================================================
 """
 
 
-def Solution(ori: list, k: int):
+def Solution(n: int):
+    def is_prime(a):
+        # 判断是否时素数
+        return a > 1 and all(a % i for i in range(2, int(a ** 0.5) + 1))
 
-    return
+    for i in range(3, int(n ** 0.5) + 1):
+        if n % i == 0:
+            s = int(n / i)
+            if is_prime(s):
+                return f"{i} {s}"
+    return -1
 
 
 if __name__ == '__main__':
-    s = [5, 1, 1, 2, 2, 2]
-    print(Solution(s, k=2))
-
-    s = [5, 1, 1, 2, 2, 2, 4, 4, 5, 5, 1, 2, ]
-    print(Solution(s, 7))
+    s = 15
+    print(Solution(s))
