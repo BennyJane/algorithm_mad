@@ -23,3 +23,4 @@ if __name__ == '__main__':
     s2 = "RDXI"
     r = Solution(s1, s2)
     print(r)
+

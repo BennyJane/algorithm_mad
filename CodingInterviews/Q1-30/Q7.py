@@ -5,7 +5,7 @@
 =================================================================================
 【猜数字】【重要】
 https://leetcode-cn.com/problems/bulls-and-cows/
-
+解决： 如何根据 secret guess 输出提示文本
 
 # 信息熵
 https://zhuanlan.zhihu.com/p/128657483
@@ -27,17 +27,17 @@ def Solution(guess_list):
 
     def analyse(secret, guess):
         # 计算位置与数值都正确的数值
-        a = sum([secret[i] == guess[i] for i in range(_len)])
-        b = 0
-        l = list(secret)
+        # a = sum([secret[i] == guess[i] for i in range(_len)]) # 等效写法
+        a = sum([s == g for s, g in zip(secret, guess)])
+        b = -1 * a  # 先去除 位置与数值都正确的情况
+        l = list(secret)  # 不可变对象（字符串） ==》 转为可变对象（列表）
         for n in guess:
             if n in l:
                 l.remove(n)
                 b += 1
-        b -= a
         return f"{a}A{b}B"
 
-    def filter(guess, result, data):
+    def _filter(guess, result, data):
         # 获取满足条件的数值
         res = []
         for n in data:
@@ -47,15 +47,13 @@ def Solution(guess_list):
         return res
 
     import copy
-    target_list = copy.deepcopy(origin)
+    target_list = copy.deepcopy(origin)  # 动态修改 target_list； 不断缩小范围
     for g in guess_list:
         guess, result = g.split()
-        target_list = filter(guess, result, target_list)
+        target_list = _filter(guess, result, target_list)
         print(target_list)
     # print(target_list)
-    if len(target_list) == 1:
-        return target_list[0]
-    return "NA"  # 不能确定
+    return "NA" if len(target_list) > 1 else target_list[0]  # 不能确定
 
 
 if __name__ == '__main__':

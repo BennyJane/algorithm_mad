@@ -4,6 +4,10 @@
 """
 =================================================================================
 【字符串加密】
+
+- 26个英文字母： string.ascii_lowercase; string.ascii_letters; string.ascii_uppercase
+- list.index()
+-
 =================================================================================
 """
 
@@ -13,12 +17,12 @@ def Solution(ori: list):
     words = string.ascii_lowercase  # 需要记住
     _len = len(words)
 
-    def move_n(index):  # 参考斐波那契数列
+    def move_n(k):  # 参考斐波那契数列
         s = [1, 2, 4]
-        if index < 3:
+        if k < 3:
             return s
         i = 3
-        while i <= index:
+        while i <= k:
             temp = s[i - 1] + s[i - 2] + s[i - 3]
             s.append(temp)
             i += 1

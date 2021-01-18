@@ -18,6 +18,17 @@ def Solution(a: int, b: int):
     return int(m * n / a)
 
 
+# 判断两个数值是否互为质数
+def gcd(a, b) -> bool:
+    """默认a,b 都是正整数"""
+    while b != 0:
+        # 连续用除数/余数，直到余数为0，跳出循环
+        a, b = b, a % b
+    if a == 1:
+        return True
+    else:
+        return False
+
 if __name__ == '__main__':
     a, b = 5, 10
     a, b = 10, 5

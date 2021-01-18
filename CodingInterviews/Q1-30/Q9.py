@@ -6,18 +6,11 @@
 【最大矩阵和】 动态规划
 最大子序和
 https://leetcode-cn.com/problems/max-submatrix-lcci/solution/er-wei-zhuan-yi-wei-by-yyy-108/
+参考Q65题目：一维数组的最大子序和
+
 
 =================================================================================
 """
-
-
-# 处理一维数组： 最大子序列和
-def Solution(nums: list) -> int:
-    _max = nums[0]
-    for i in range(1, len(nums)):
-        nums[i] = max(nums[i], nums[i] + nums[i - 1])
-        _max = max(_max, nums[i])
-    return _max
 
 
 # 处理二维数组
@@ -57,6 +50,32 @@ def Solution2(matrix):
     return _final_max
 
 
+def Solution3(matrix):
+    def getMaxOneMatrix(l):
+        # FIXME 传入的是可变对象（列表）， 必须使用深拷贝，避免影响主程序中列表内容
+        import copy
+        ori = copy.deepcopy(l)
+        for i in range(1, len(ori)):
+            if ori[i - 1] >= 0:
+                ori[i] = ori[i] + ori[i - 1]
+        return max(ori)
+
+    r_num = len(matrix)
+    c_num = len(matrix[0])
+    _final_max = float("-inf")
+
+    for c1 in range(c_num):
+        col_sum = [0 for _ in range(r_num)]
+        for c2 in range(c1, c_num):
+            for r in range(r_num):
+                # FIXME 必须是累加符号
+                col_sum[r] += matrix[r][c2]
+            _max = getMaxOneMatrix(col_sum)
+            if _max > _final_max:
+                _final_max = _max
+    return _final_max
+
+
 if __name__ == '__main__':
     l1 = [
         [-3, 5, -1, 5],
@@ -75,6 +94,14 @@ if __name__ == '__main__':
 
     print(Solution2(l2))
 
+    l3 = [
+        [-3, 5, -1, 5],
+        [-1, 3, -1, 3],
+        [2, 4, -2, 4],
+        [2, 5, 4, -1],
+    ]
+
+    print(Solution3(l3))
 
 """
 for c1 in range(col_num):  # 起始列

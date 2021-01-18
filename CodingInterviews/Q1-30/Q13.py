@@ -4,6 +4,7 @@
 """
 =================================================================================
 【靠谱的车】
+-  模拟数值增长
 =================================================================================
 """
 
@@ -15,13 +16,28 @@ def Solution(end: int):
         _sum += 1
         _sum_str = str(_sum)
         if "4" in _sum_str:
+            # len(l) - (index + 1)
             position = len(_sum_str) - _sum_str.index("4") - 1
-            incr = 10 ** position   # 只需要按照个 十 百位置增加即可
+            incr = 10 ** position  # 只需要按照个 十 百位置增加即可
             skip += incr
             _sum += incr
 
     real = end - skip
     return real
+
+
+def Solution2(end: int):
+    cur_num = 0
+    skip = 0
+    while cur_num < end:
+        cur_num += 1
+        cur_num_str = str(cur_num)
+        if "4" in cur_num_str:
+            position = len(cur_num_str) - (cur_num_str.index("4") + 1)
+            incr = 10 ** position
+            skip += incr
+            cur_num += incr
+    return end - skip
 
 
 if __name__ == '__main__':

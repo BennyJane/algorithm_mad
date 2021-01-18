@@ -32,12 +32,33 @@ def Solution(n: int, k: int):
     return ''.join(list(map(str, ans)))
 
 
+def Solution2(n, k):
+    from math import factorial
+    nums = [i for i in range(1, n + 1)]
+    ans = []
+
+    k -= 1
+    while len(nums) > 0:
+        index = k // factorial(len(nums) - 1)
+        ans.append(nums[index])
+        k = k % factorial(len(nums) - 1)
+        nums.pop(index)
+    print(nums, "ans", ans)
+    return ''.join(list(map(str, ans)))
+
+
 if __name__ == '__main__':
     s, k = 4, 10
     print(Solution(s, k))
 
-    s, k = 3, 3
+    s, k = 3, 1
     print(Solution(s, k))
 
     s, k = 3, 5
     print(Solution(s, k))
+
+    s, k = 3, 5
+    print(Solution2(s, k))
+
+    s, k = 3, 2
+    print(Solution2(s, k))
