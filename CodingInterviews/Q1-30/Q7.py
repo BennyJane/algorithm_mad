@@ -19,7 +19,7 @@ def Solution(guess_list):
     # 获取所有可能的4位数字
     origin = []
     for i in range(9999):
-        if i <= 999:
+        if i <= 999:    # 包含 999； 需要前置位置补0
             prefix = "0" * (_len - len(str(i)))
             origin.append(f"{prefix}{i}")
         else:

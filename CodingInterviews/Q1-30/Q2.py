@@ -54,7 +54,7 @@ def Solution3(s: str):
     cur_count = 0
     while cur_count < _count:   # 出现的次数为限制条件
         if start % 7 == 0 or '7' in str(start):
-            index = start % n - 1
+            index = start % n - 1   # FIXME 数值转列表索引需要减去1
             d[index] += 1
             cur_count += 1
         start += 1

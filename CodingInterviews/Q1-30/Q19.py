@@ -16,7 +16,7 @@ def Solution(n: int):
     for i in range(3, int(n ** 0.5) + 1):
         if n % i == 0:
             s = int(n / i)  # FIXME 必须使用int，避免出现小数点参数
-            if is_prime(s):
+            if is_prime(s) and is_prime(i):
                 return f"{i} {s}"
     return -1
 
@@ -24,3 +24,4 @@ def Solution(n: int):
 if __name__ == '__main__':
     s = 15
     print(Solution(s))
+    print(Solution(21))

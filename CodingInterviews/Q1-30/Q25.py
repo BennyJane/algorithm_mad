@@ -20,7 +20,7 @@ def Solution(ori: list):
             right = ori[j]
             if right > left:
                 res[i] = j
-                break  # 及时终止
+                break  # FIXME 及时终止
             else:
                 j += 1
     return res
