@@ -9,9 +9,16 @@ class Solution:
         """
         if not root:
             return None
-        self.flatten(root.left)
-        if root.right:
-            right = root.right
+        left = root.left
+        right = root.right
+        if left:
+            root.left = None
+            root.right = left
+            root = root.right
             self.flatten(root.right)
-            root.left.right = right
-            root.right = None
+        if right:
+            root.right = right
+            root.left = None
+            root = root.right
+            self.flatten(root.right)
+
