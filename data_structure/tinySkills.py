@@ -41,7 +41,6 @@ children([1, 2, 3])
 --------------------------------------
 """
 
-
 def findTwoNum(nums1: List[int], nums2: List[int], target: int):
     left = 0
     right = len(nums2) - 1
