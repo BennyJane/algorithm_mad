@@ -6,6 +6,4 @@ class Solution:
     def lastStoneWeightII(self, stones: List[int]) -> int:
         n = len(stones)
 
-
-
         return 0
