@@ -29,12 +29,16 @@ class Solution:
     def replaceWords2(self, dictionary: List[str], sentence: str) -> str:
         # TODO 使用lambda 定义了建议字典树
         Trie = lambda: collections.defaultdict(Trie)
+        # 返回：默认值均为Trie的字典
         trie = Trie()
         END = True
 
         for root in dictionary:
-            reduce(dict.__getitem__, root, trie)[END] = root
-
+            # tire 作为initial参数，在reduce中func方法调用前执行
+            # 对trie执行dict.__getitem__方法
+            temp = reduce(dict.__getitem__, root, trie)
+            temp[END] = root
+        print(trie.keys())
         def replace(word):
             cur = trie
             for letter in word:
@@ -43,4 +47,15 @@ class Solution:
                 cur = cur[letter]
             return cur.get(END, word)
 
-        return " ".join(map(reduce, sentence.split()))
+        return " ".join(map(replace, sentence.split()))
+
+
+if __name__ == '__main__':
+    sol = Solution()
+    roots = ["cat", "bat", "rat"]
+    sentence = "the cattle was rattled by the battery"
+    sol.replaceWords2(roots, sentence)
+
+    f = lambda x, y: x + y
+    res = reduce(f, [1, 2, 3, 4], 10)
+    print(res)
