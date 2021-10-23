@@ -1,7 +1,7 @@
 import logging
-from logging import DEBUG
 from typing import List
-
+from logging import DEBUG
+from collections import defaultdict
 from sortedcontainers import SortedList
 
 logger = logging.getLogger()
@@ -56,8 +56,6 @@ def demo1():
 默认字段：设置字典的默认值 defaultdict
 --------------------------------------
 """
-
-from collections import defaultdict
 
 
 def demo2():

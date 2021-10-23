@@ -59,3 +59,10 @@ def findTwoNum(nums1: List[int], nums2: List[int], target: int):
 
 res = findTwoNum([1, 2, 4, 3, ], [1, 4, 5, 3], 6)
 logging.info(res)
+
+
+"""
+--------------------------------------
+判断是否为质数
+--------------------------------------
+"""
