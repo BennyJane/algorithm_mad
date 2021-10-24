@@ -75,3 +75,13 @@ print("[reversed()的返回值=》转列表]", list(res))
 s = "sdkfsalgjsdkADKJKDHGNCH"
 print("[sorted]: ", "".join(sorted(s)))
 print("[sorted]: ", "".join(sorted(s, key=ord)))
+
+if __name__ == '__main__':
+    """
+    注意事项：
+    1. 类变量，最好不要直接使用 l = [], d = {} 方式定义，会因为浅拷贝，造成不同测试用例之间的干扰；
+    建议在调用方法内部初始化 L = list() d = dict()
+    
+    
+    """
+    pass
