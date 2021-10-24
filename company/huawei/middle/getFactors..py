@@ -1,4 +1,5 @@
 from typing import List
+from math import sqrt
 
 
 # 254. 因子的组合
@@ -6,6 +7,7 @@ from typing import List
 class Solution:
     # S: 递归；去重；动态规划
     def getFactors(self, n: int) -> List[List[int]]:
+        # TODO 递归参数l：确保了不会出现重复数据，确保了生成因子为升序排列
         def dfs(n, l):
             res = []
             for i in range(l, int(sqrt(n)) + 1):
