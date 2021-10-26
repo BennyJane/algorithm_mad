@@ -1,3 +1,4 @@
+import collections
 import heapq
 from typing import List
 from collections import Counter
@@ -111,11 +112,38 @@ class MedianFinder1:
 # 387. 字符串中的第一个唯一字符（Simple）
 class Solution2:
     def firstUniqChar(self, s: str) -> int:
+        d = dict()
         for i, v in enumerate(s):
-            if s.count(v) == 1:
-                return i
-
+            if v not in d:
+                d[v] = [1, i]
+            else:
+                d[v][0] += 1
+        ans = sorted(d.values())[0]
+        if ans[0] == 1:
+            return ans[1]
         return -1
+
+    def firstUniqChar3(self, s: str) -> int:
+        frequency = collections.Counter(s)
+        for i, ch in enumerate(s):
+            if frequency[ch] == 1:
+                return i
+        return -1
+
+    # 队列
+    def firstUniqChar4(self, s: str) -> int:
+        position = dict()
+        q = collections.deque()
+        n = len(s)
+        for i, ch in enumerate(s):
+            if ch not in position:
+                position[ch] = i
+                q.append((s[i], i))
+            else:
+                position[ch] = -1
+                while q and position[q[0][0]] == -1:
+                    q.popleft()
+        return -1 if not q else q[0][1]
 
     def firstUniqChar2(self, s: str) -> int:
         for i, v in enumerate(s):
