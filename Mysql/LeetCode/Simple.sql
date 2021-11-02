@@ -263,3 +263,69 @@ from employees
 order by employee_id;
 
 -- substr和substring都可以
+
+-- 620. 有趣的电影
+-- mod(a, b) 取模函數
+select id, movie, description, rating from cinema where mod(id, 2) and description <> 'boring' order by rating desc;
+
+-- 1777. 每家商店的产品价格
+-- TODO 必須使用聚合函數，否則計算結果有誤
+select product_id,
+-- case when store = 'store1' then price end as store1 ==》 错误，只有第一条case数据可匹配显示
+sum(case when store = 'store1' then price end) as store1,
+sum(case when store = 'store2' then price end) as store2,
+sum(case when store = 'store3' then price end) as store3
+from Products group by product_id;
+
+-- 1050. 合作过至少三次的演员和导演
+-- 多条件分组
+select actor_id, director_id from ActorDirector group by actor_id, director_id having count(timestamp) >= 3;
+
+-- 1083. 销售分析 II TODO 经典题目
+-- 使用IF语句，扩展having的筛选功能； 使用sum统计数量
+-- 完全可以替换为 case when语句
+select s.buyer_id from Sales s join Product p on s.product_id = p.product_id
+group by buyer_id
+ having sum(IF(p.product_name='S8', 1, 0)) > 0 and
+ sum(IF(p.product_name='IPhone', 1, 0)) = 0;
+-- 聚合函数 count：对于NULL 不计入统计
+-- 完全可以替换为 case when语句
+select s.buyer_id from Sales s join Product p on s.product_id = p.product_id
+group by buyer_id
+ having count(IF(p.product_name='S8', 1, NULL)) > 0 and
+ count(IF(p.product_name='IPhone', 1, NULL)) = 0;
+
+-- 子查询：聚合运算放到select后执行
+
+select temp.buyer_id from
+    ( select buyer_id,
+     sum(IF(p.product_name='S8', 1, 0)) as s8_cnt,
+     sum(IF(p.product_name='IPhone', 1, 0)) as iphone_cnt
+     from Sales s join Product p on s.product_id = p.product_id
+     group by s.buyer_id having s8_cnt >= 1 and iphone_cnt = 0 ) as temp;
+
+-- 子查询
+select distinct buyer_id from Sales s join Product p on s.product_id = p.product_id
+where p.product_name='S8' and buyer_id not in (
+    select s.buyer_id from Sales s join Product p on s.product_id = p.product_id
+    where p.product_name='IPhone'
+);
+
+-- 1661. 每台机器的进程平均运行时间
+-- round() 函数
+select temp.machine_id, round(temp.spend / temp.total, 3) AS 'processing_time'
+from (
+select machine_id, count(process_id) / 2 as total,
+    sum(IF(activity_type='start', -1 * timestamp, timestamp)) as spend
+from Activity group by machine_id) as temp;
+
+-- count(distinct field) 搭配去重
+select machine_id, ROUND(
+    SUM(IF(activity_type='start', -1timestamp, timestamp)) / count(distinct process_id)
+    , 3
+) as 'processing_time'
+from from Activity group by machine_id;
+
+-- 1809. 没有广告的剧集
+select session_id  from Playback p join Ads a on p.customer_id = a.customer_id
+    group by session_id having p.end_time < a.timestamp or p.start_time > a.timestamp;
