@@ -14,7 +14,7 @@ Java内使用TreeMap
 """
 
 
-def demo1():
+def sortedListFunc():
     # 实例化
     l = SortedList([0, 1, 2, 3, 4])
     sorted_list = SortedList()
@@ -58,14 +58,18 @@ def demo1():
 """
 
 
-def demo2():
+def defaultdictFunc():
     d = defaultdict(int)
     l: List[int] = list()
     print(d)
 
 
+def headqFunc():
+    pass
+
+
 if __name__ == '__main__':
     logging.info("---- demo1 ---")
-    demo1()
+    sortedListFunc()
     logging.info("---- demo2 ---")
-    demo2()
+    defaultdictFunc()

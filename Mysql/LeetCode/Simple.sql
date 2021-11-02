@@ -200,3 +200,66 @@ where s1.free = 1
 order by s1.seat_id;
 
 
+-- 1179. 重新格式化部门表
+-- 核心
+    -- case 语句对分组结果筛选，可以获取非筛选字段
+    -- ==》 对比 having 语句，只能筛选一类数据，且只能对分组字段进行处理
+    -- case when `expression` then `expression` end
+    -- 聚合函数，处理null情况
+SELECT id,
+MIN(CASE WHEN month='Jan' THEN revenue END) AS Jan_Revenue,
+AVG(CASE WHEN month='Feb' THEN revenue END) AS Feb_Revenue,
+SUM(CASE WHEN month='Mar' THEN revenue END) AS Mar_Revenue,
+SUM(CASE WHEN month='Apr' THEN revenue END) AS Apr_Revenue,
+SUM(CASE WHEN month='May' THEN revenue END) AS May_Revenue,
+SUM(CASE WHEN month='Jun' THEN revenue END) AS Jun_Revenue,
+SUM(CASE WHEN month='Jul' THEN revenue END) AS Jul_Revenue,
+SUM(CASE WHEN month='Aug' THEN revenue END) AS Aug_Revenue,
+SUM(CASE WHEN month='Sep' THEN revenue END) AS Sep_Revenue,
+SUM(CASE WHEN month='Oct' THEN revenue END) AS Oct_Revenue,
+SUM(CASE WHEN month='Nov' THEN revenue END) AS Nov_Revenue,
+SUM(CASE WHEN month='Dec' THEN revenue END) AS Dec_Revenue
+FROM department
+GROUP BY id
+ORDER BY id;
+
+-- 1873. 计算特殊奖金
+select a.employee_id,
+       (CASE
+         WHEN mod(a.employee_id, 2) = 1 AND a.name not like 'M%' THEN
+          a.salary
+         ELSE
+          0
+       END) bonus
+  from Employees a
+  order by a.employee_id
+
+select
+    employee_id,
+    if(
+        employee_id&1 and name regexp '^[^M]',
+        salary,
+        0
+    ) as bonus
+from employees
+order by employee_id;
+
+select
+    employee_id,
+    if(
+        employee_id&1 and left(name, 1)<>'M',
+        salary,
+        0
+    ) as bonus
+from employees
+order by employee_id;
+
+select
+    employee_id,
+    salary * (
+        employee_id&1 and substr(name, 1, 1)<>'M'
+    ) as bonus
+from employees
+order by employee_id;
+
+-- substr和substring都可以
