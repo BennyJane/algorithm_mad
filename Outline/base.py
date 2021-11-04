@@ -2,6 +2,7 @@
 # -*-coding:utf-8 -*-
 # Warning    ：The Hard Way Is Easier
 import math
+import sys
 
 # 平方与开平方
 res = math.pow(10, 2)
@@ -75,6 +76,12 @@ print("[reversed()的返回值=》转列表]", list(res))
 s = "sdkfsalgjsdkADKJKDHGNCH"
 print("[sorted]: ", "".join(sorted(s)))
 print("[sorted]: ", "".join(sorted(s, key=ord)))
+
+
+# 取最大值
+maxSize = sys.maxsize
+maxFloat = float("inf")
+minFloat = float("-inf")
 
 if __name__ == '__main__':
     """
