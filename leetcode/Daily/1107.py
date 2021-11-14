@@ -39,3 +39,39 @@ class Solution1:
             total += v
             ans[i] = total
         return ans[:-1]
+
+
+# 520. 检测大写字母
+class Solution2:
+    def detectCapitalUse(self, word: str) -> bool:
+        ori = word
+        choices = [word.lower(), word.upper(), word[0].upper() + word[1:].lower()]
+
+        return ori in choices
+
+    def detectCapitalUse1(self, word: str) -> bool:
+        # 若第 1 个字母为小写，则需额外判断第 2 个字母是否为小写
+        if len(word) >= 2 and word[0].islower() and word[1].isupper():
+            return False
+
+        # 无论第 1 个字母是否大写，其他字母必须与第 2 个字母的大小写相同
+        return all(word[i].islower() == word[1].islower() for i in range(2, len(word)))
+
+
+# 677. 键值映射
+# 可以使用字典树
+# https://leetcode-cn.com/problems/map-sum-pairs/
+class MapSum:
+
+    def __init__(self):
+        self.cache = dict()
+
+    def insert(self, key: str, val: int) -> None:
+        self.cache[key] = val
+
+    def sum(self, prefix: str) -> int:
+        ans = 0
+        for key, val in self.cache.items():
+            if str(key).startswith(prefix):
+                ans += val
+        return ans

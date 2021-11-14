@@ -296,6 +296,32 @@ class Solution4:
 
 # 715. Range 模块 HARD
 # https://leetcode-cn.com/problems/range-module/
+class RangeModule:
+
+    def __init__(self):
+        self.cache = defaultdict(int)
+        self.sortedList = None
+
+    # FIXME
+    def addRange(self, left: int, right: int) -> None:
+        self.cache[left] = 1
+        self.cache[right] = -1
+        self.sortedList = sorted(self.cache.items())
+
+    def queryRange(self, left: int, right: int) -> bool:
+        ans = [False] * (right - left)
+
+        pre = 0
+        for index, val in self.sortedList:
+            pre += val
+            if left <= index < right:
+                if pre > 0:
+                    ans[index - left] = True
+        return all(ans)
+
+    def removeRange(self, left: int, right: int) -> None:
+        self.cache[left] = -1
+        self.cache[right] = 1
 
 
 # 1094. 拼车
