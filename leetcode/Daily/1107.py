@@ -75,3 +75,33 @@ class MapSum:
             if str(key).startswith(prefix):
                 ans += val
         return ans
+
+
+import math
+
+
+# 319. 灯泡开关
+class Solution3:
+    def bulbSwitch(self, n: int) -> int:
+        if n <= 1:
+            return n
+        ans = 1
+
+        def count(num):
+            res = 1
+            limit = int(math.sqrt(num)) + 1
+            for j in range(2, limit):
+                if num % j == 0:
+                    if j * j == num:
+                        res += 1
+                    else:
+                        res += 2
+            return res
+
+        for i in range(2, n):
+            if count(i) % 2 == 0:
+                ans += 1
+        return ans
+
+    def bulbSwitch2(self, n: int) -> int:
+        return int(math.sqrt(n + 0.5))

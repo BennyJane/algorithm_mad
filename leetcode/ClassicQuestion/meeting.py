@@ -1,4 +1,5 @@
 import heapq
+from bisect import bisect
 from typing import List
 from heapq import heappop
 from heapq import heappush
@@ -296,7 +297,8 @@ class Solution4:
 
 # 715. Range 模块 HARD
 # https://leetcode-cn.com/problems/range-module/
-class RangeModule:
+class RangeModule1:
+    # FIXME 失败：测试用例无法全部通过
 
     def __init__(self):
         self.cache = defaultdict(int)
@@ -322,6 +324,52 @@ class RangeModule:
     def removeRange(self, left: int, right: int) -> None:
         self.cache[left] = -1
         self.cache[right] = 1
+
+
+class RangeModule(object):
+    def __init__(self):
+        self.ranges = []
+
+    def _bounds(self, left, right):
+        # 寻找self.ranges中，区间位于[left, right]范围内(两端均包括在内)，索引范围
+        i, j = 0, len(self.ranges) - 1
+        # self.ranges为升序
+        # 使用不同颗粒大小(步长)，搜索临界值，减少遍历次数
+        for d in (100, 10, 1):
+            while i + d - 1 < len(self.ranges) and self.ranges[i + d - 1][1] < left:
+                # 寻找做端点
+                i += d
+            while j >= d - 1 and self.ranges[j - d + 1][0] > right:
+                j -= d
+        return i, j
+
+    def addRange(self, left, right):
+        i, j = self._bounds(left, right)
+        # 相交区间全部被覆盖
+        if i <= j:
+            # 更新左右端点值
+            left = min(left, self.ranges[i][0])
+            right = max(right, self.ranges[j][1])
+        self.ranges[i:j + 1] = [(left, right)]
+
+    def queryRange(self, left, right):
+        # 查询左侧端点插入位置索引
+        i = bisect.bisect_left(self.ranges, (left, float('inf')))
+        if i: i -= 1
+        return (bool(self.ranges) and
+                self.ranges[i][0] <= left and
+                right <= self.ranges[i][1])
+
+    def removeRange(self, left, right):
+        i, j = self._bounds(left, right)
+        merge = []
+        # [left, right]区间范围外的需要保留
+        for k in range(i, j + 1):
+            if self.ranges[k][0] < left:
+                merge.append((self.ranges[k][0], left))
+            if right < self.ranges[k][1]:
+                merge.append((right, self.ranges[k][1]))
+        self.ranges[i:j + 1] = merge
 
 
 # 1094. 拼车

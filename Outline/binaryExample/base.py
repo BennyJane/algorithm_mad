@@ -59,4 +59,7 @@ print(1 << 10)
 print(2 << 10)
 print(3 << 10)
 
+print(-1 << 29)
+print(-0 << 29)
+print(1 << 29)
 
