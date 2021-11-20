@@ -1,4 +1,5 @@
 from typing import List
+from collections import Counter
 
 
 # 598. 范围求和 II
@@ -105,3 +106,54 @@ class Solution3:
 
     def bulbSwitch2(self, n: int) -> int:
         return int(math.sqrt(n + 0.5))
+
+
+# 594. 最长和谐子序列
+class Solution4:
+    def findLHS(self, nums: List[int]) -> int:
+        d = dict()
+        for n in nums:
+            if n in d:
+                d[n] += 1
+            else:
+                d[n] = 1
+        countList = sorted(d.items(), key=lambda x: x)
+        length = len(countList)
+        ans = 0
+        for i in range(1, length):
+            if countList[i][0] - countList[i - 1][0] == 1:
+                l = countList[i][1] + countList[i - 1][1]
+                ans = max(ans, l)
+
+        return ans
+
+    def findLHS1(self, nums: List[int]) -> int:
+        count = Counter(nums)
+
+        sortedNums = sorted(count.items())
+        n = len(sortedNums)
+        dp = [0] * n
+        for i in range(1, n):
+            x, c1 = sortedNums[i]
+            y, c2 = sortedNums[i - 1]
+            if x - y == 1:
+                dp[i] = c1 + c2
+        return max(dp)
+
+    def findLHS2(self, nums: List[int]) -> int:
+        cnt = Counter(nums)
+        return max((val + cnt[key + 1] for key, val in cnt.items() if key + 1 in cnt), default=0)
+
+    # 滑动窗口
+    def findLHS3(self, nums: List[int]) -> int:
+        nums.sort()
+        begin = 0
+        ans = 0
+        for end in range(len(nums)):
+            # TODO 维护窗口：保证左右端点差值 <= 1
+            while nums[end] - nums[begin] > 1:
+                begin += 1
+
+            if nums[end] - nums[begin] == 1:
+                ans = max(ans, end - begin + 1)
+        return 0

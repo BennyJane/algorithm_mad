@@ -1,3 +1,4 @@
+from itertools import product
 from typing import List
 import sys
 
@@ -68,7 +69,11 @@ class Solution5:
     """
 
     def permutation(self, s: str) -> List[str]:
-        return []
+        n = len(s)
+        ans = []
+        for i in range(n):
+            temp = s[i] + self.permutation(s[:i]) + self.permutation(s[i:])
+        return list(ans)
 
 
 # 面试题 01.07. 旋转矩阵
@@ -79,3 +84,8 @@ class Solution6:
         """
         Do not return anything, modify matrix in-place instead.
         """
+
+
+if __name__ == '__main__':
+    sol = Solution5()
+    sol.permutation("abc")
