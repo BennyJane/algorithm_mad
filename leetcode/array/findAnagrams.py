@@ -59,13 +59,6 @@ class Solution1:
         for i in range(s_len - p_len):
             s_count[ord(s[i]) - 97] -= 1
             s_count[ord(s[i + p_len]) - 97] += 1
-
-
-
-
-
-
-
             # 利用PY中数组相等性质，直接判断
             if s_count == p_count:
                 ans.append(i + 1)
