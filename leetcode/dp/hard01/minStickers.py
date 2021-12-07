@@ -83,6 +83,10 @@ class Solution1:
         return dp[total_status - 1]
 
 
+
+
+
+
 # 383. 赎金信
 class Solution2:
     def canConstruct(self, ransomNote: str, magazine: str) -> bool:
