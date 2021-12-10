@@ -640,3 +640,42 @@ class Solution11:
                 dfs(i)
 
         return valid
+
+
+# 684. 冗余连接
+class Solution12:
+    # 效率更高
+    def findRedundantConnection(self, edges: List[List[int]]) -> List[int]:
+        # 记录各个连通分量,每个连通分量使用数组存储
+        queue = deque()
+        for x, y in edges:
+            cur = {x, y}
+            size = len(queue)
+            for _ in range(size):
+                s = queue.popleft()
+                if x in s and y in s:
+                    return [x, y]
+                elif x in s or y in s:
+                    cur.update(s)
+                else:
+                    queue.append(s)
+            queue.append(cur)
+        return []
+
+    def findRedundantConnection2(self, edges: List[List[int]]) -> List[int]:
+        # 记录各个连通分量,每个连通分量使用数组存储
+        res = list()
+        for item in edges:
+            cur = set(item)
+            x, y = item
+            temp = list()  # 数组重复创建于删除
+            for s in res:
+                if x in s and y in s:
+                    return [x, y]
+                elif x in s or y in s:
+                    cur.update(set(s))
+                else:
+                    temp.append(s)
+            temp.append(cur)
+            res = temp
+        return []
