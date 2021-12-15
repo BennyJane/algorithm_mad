@@ -1,5 +1,5 @@
 from typing import List
-from collections import Counter
+from collections import Counter, defaultdict
 
 
 # 598. 范围求和 II
@@ -157,3 +157,26 @@ class Solution4:
             if nums[end] - nums[begin] == 1:
                 ans = max(ans, end - begin + 1)
         return 0
+
+
+# 851. 喧闹和富有
+class Solution5:
+    def loudAndRich(self, richer: List[List[int]], quiet: List[int]) -> List[int]:
+        d = defaultdict(list)
+        n = len(quiet)
+        ans = [i for i in range(n)]
+
+        for x, y in richer:
+            d[y].append(x)
+
+        # FIXME 深度优先搜索，查找所有满足钱不少于当前索引处x的列表
+        for i in range(n):
+            pass
+
+        for i in range(n):
+            res = i
+            for larger in d[i]:
+                if quiet[larger] < quiet[res]:
+                    res = larger
+            ans[i] = res
+        return ans

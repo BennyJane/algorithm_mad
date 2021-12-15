@@ -3,10 +3,12 @@ from typing import List
 from bisect import bisect_left, bisect
 from collections import defaultdict
 from sortedcontainers import SortedList
-from baseClass import TreeNode
-
+from math import lcm
 
 # 剑指 Offer II 006. 排序数组中两个数字之和
+from leetcode.utils import TreeNode
+
+
 class Solution1:
     # 确定一个数以后，再使用二分法查找另一个数
     def twoSum(self, numbers: List[int], target: int) -> List[int]:
@@ -288,7 +290,7 @@ class Solution21:
             pre.append(pre[i] * nums[i])
         ans = 0
         for i in range(1, n + 1):
-            if nums[i] >= target:
+            if nums[i] >= k:
                 continue
             l, r = 0, i
             while l <= r:
@@ -354,6 +356,7 @@ class Solution21:
         return ans
 
 
+
 # 560.和为K的子数组 TODO 错误多次
 class Solution22:
     # 取值范围：有正有负; 子数组连续
@@ -385,3 +388,168 @@ class Solution22:
                 ans += d[pre - k]
             d[pre] += 1
         return ans
+
+
+# 523. 连续的子数组和 TODO 错误
+class Solution23:
+    # 连续子数组； 和为k的整数倍[0:]
+    # 不能排序，需要保证原数组顺序
+
+    # TODO 核心思路： 转化为当前前缀和与已访问前缀和的关系
+
+    # 560.参考和为k的子数组
+    # pre % k = x --》 x * k = pre
+    def checkSubarraySum(self, nums: List[int], k: int) -> bool:
+        n = len(nums)
+        preSum = [0] * (n + 1)
+        for i in range(n):
+            preSum[i + 1] = nums[i] + preSum[i]
+
+        # 使用map记录次数，可用于解答数量统计问题；子数组长度统计最值问题；
+        seen = set()
+        for i in range(2, len(preSum)):
+            # i -2 处的前缀和可以加到可选择选项中
+            modVal = preSum[i - 2] % k
+            seen.add(modVal)
+            # 找到前缀和的余数恰好等于当前余数的索引位置，最终结果区间两个余数相等的索引之间
+            if preSum[i] % k in seen:
+                return True
+        return False
+
+    # 参考文章： https://leetcode-cn.com/problems/continuous-subarray-sum/solution/gong-shui-san-xie-tuo-zhan-wei-qiu-fang-1juse/
+    def checkSubarraySum2(self, nums: List[int], k: int) -> bool:
+        n = len(nums)
+        if n < 2:
+            return False
+        d = defaultdict(int)  # 记录余数出现的索引位置
+        remainder = 0  # 记录余数
+        for i, c in enumerate(nums):
+            remainder = (remainder + nums[i]) % k
+            if remainder in d.keys():
+                preIndex = d.get(remainder)
+                if i - preIndex >= 2:
+                    return True
+            else:
+                # 同余数值，只记录最左侧索引，确保长度最大
+                d[remainder] = i
+        return False
+
+    # 超时
+    def checkSubarraySum3(self, nums: List[int], k: int) -> bool:
+        pre = [0]
+        for i, c in enumerate(nums):
+            pre.append(c + pre[i])
+
+        n = len(nums)
+        for i in range(n):
+            for j in range(i + 1, n + 1):
+                if j - i < 2:
+                    continue
+                cur = pre[j] - pre[i]
+                if cur == 0:
+                    return True
+                if cur % k == 0:
+                    return True
+        return False
+
+
+# 974.和可被 K 整除的子数组
+class Solution24:
+    # 参考 523.连续子数组和； 本题目统计数量
+    def subarraysDivByK(self, nums: List[int], k: int) -> int:
+        n = len(nums)
+        d = defaultdict(int)
+        d[0] = 1  # 表示前缀和恰好为k倍数的情况也满足题目要求
+
+        ans = 0
+        remainder = 0
+        for i in range(n):
+            remainder = (remainder + nums[i]) % k
+            if remainder in d.keys():
+                ans += d.get(remainder)
+            d[remainder] += 1
+
+        return ans
+
+    def subarraysDivByK2(self, nums: List[int], k: int) -> int:
+        record = {0: 1}
+        total, ans = 0, 0
+        for elem in nums:
+            total += elem
+            modulus = total % k
+            same = record.get(modulus, 0)
+            ans += same
+            record[modulus] = same + 1
+        return ans
+
+    def subarraysDivByK3(self, nums: List[int], k: int) -> int:
+        record = {0: 1}
+        total = 0
+        for elem in nums:
+            total += elem
+            modulus = total % k
+            record[modulus] = record.get(modulus, 0) + 1
+
+        ans = 0
+        # 排列组合方法：计算同余数的情况
+        for x, cx in record.items():
+            ans += cx * (cx - 1) // 2
+        return ans
+
+
+# 1201. 丑数 III
+class Solution25:
+    def nthUglyNumber(self, n: int, a: int, b: int, c: int) -> int:
+        cnt = 0
+        for i in range(2 * 10 ** 9):
+            if i % a == 0 or i % b == 0 or i % c == 0:
+                cnt += 1
+            if cnt == n:
+                return i
+        return -1
+
+    def nthUglyNumber3(self, n: int, a: int, b: int, c: int) -> int:
+        lab, lbc, lac, labc = lcm(a, b), lcm(b, c), lcm(a, c), lcm(a, b, c)
+
+        def countugly(x):
+            return x // a + x // b + x // c - x // lab - x // lbc - x // lac + x // labc
+
+        l, r = 1, min(min(a, b, c) * n, 2 * pow(10, 9))
+        while l < r:
+            m = (l + r) // 2
+            if countugly(m) < n:
+                l = m + 1
+            else:
+                r = m
+        return l
+
+    def nthUglyNumber4(self, n: int, a: int, b: int, c: int) -> int:
+        lab, lbc, lac, labc = lcm(a, b), lcm(b, c), lcm(a, c), lcm(a, b, c)
+
+        def countugly(x):
+            return x // a + x // b + x // c - x // lab - x // lbc - x // lac + x // labc
+
+        l, r = n // countugly(labc) * labc, (n // countugly(labc) + 1) * labc
+        while l < r:
+            m = (l + r) // 2
+            if countugly(m) < n:
+                l = m + 1
+            else:
+                r = m
+        return l
+
+    # 丑数II的思路 错误
+    def nthUglyNumber2(self, n: int, a: int, b: int, c: int) -> int:
+        array = [a, b, c]
+        seen = set(array)
+        while n > 0:
+            minVal = heappop(array)
+            n -= 1
+            if minVal * a not in seen:
+                heappush(array, minVal * a)
+            if minVal * b not in seen:
+                heappush(array, minVal * b)
+            if minVal * c not in seen:
+                heappush(array, minVal * c)
+        return array[-1]
+
