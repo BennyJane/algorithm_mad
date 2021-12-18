@@ -1,9 +1,9 @@
-# 246. 中心对称数
 from functools import lru_cache
 from typing import List
 
 
 class Solution1:
+    # 246. 中心对称数
     def isStrobogrammatic(self, num: str) -> bool:
         # 满足旋转后还是数字的数字
         # 2 5 不是
