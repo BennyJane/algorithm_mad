@@ -1,5 +1,6 @@
 import collections
 from collections import deque
+from collections import Counter
 from itertools import chain
 from typing import List
 from collections import defaultdict
@@ -679,3 +680,98 @@ class Solution12:
             temp.append(cur)
             res = temp
         return []
+
+
+# 找到小镇的法官 DIMPLE
+# 寻找个节点的入度是 n-1, 出度是 0
+class Solution13:
+    def findJudge(self, n: int, trust: List[List[int]]) -> int:
+        inDegrees = Counter(y for _, y in trust)
+        outDegrees = Counter(x for x, _ in trust)
+        return next((i for i in range(1, n + 1) if inDegrees[i] == n - 1 and outDegrees[i] == 0), -1)
+
+    def findJudge2(self, n: int, trust: List[List[int]]) -> int:
+        # FIXME 需要特别处理N为1的情况
+        if n == 1:
+            return 1
+        d = dict()  # 记录信任某人的其他人列表，使用集合存储
+        visited = [False] * n  # 记录是否信任过其他人，法官为False
+        for x, y in trust:
+            visited[x - 1] = True
+            if y not in d:
+                d[y] = set()
+                d[y].add(x)
+            else:
+                d[y].add(x)
+        # FIXME 必须先统计完所有数据，才判断，不能中途直接判断
+        for k, v in d.items():
+            if len(v) == n - 1 and not visited[k - 1]:
+                return k
+        return -1
+
+    # 转化为 寻找名人的题目
+    def findJudge3(self, n: int, trust: List[List[int]]) -> int:
+        if n == 1:
+            return 1
+        d = defaultdict(set)
+        for x, y in trust:
+            d[x].add(y)
+        ans = 1
+        # 利用法官不信任任何人的条件,中断查询
+        for i in range(2, n + 1):
+            if ans in d and i in d[ans]:
+                ans = i
+        # ans 信任别人，直接返回-1
+        if ans in d:
+            return -1
+        for i in range(1, n + 1):
+            if i == ans:
+                continue
+            # i 不信任法官
+            if i not in d:
+                return -1
+            if ans not in d[i]:
+                return -1
+        return ans
+
+
+# 277. 搜寻名人 MIDDLE
+class Solution:
+
+    def findCelebrity(self, n: int) -> int:
+        def knows(a: int, b: int) -> bool:
+            return True
+
+        # 筛选候选人
+        candidate = 0
+        for i in range(1, n):
+            if knows(candidate, i):
+                candidate = i
+        # 检查候选人
+        for i in range(n):
+            if i == candidate:
+                continue
+            if not knows(i, candidate):
+                return -1
+            if knows(candidate, i):
+                return -1
+        return candidate
+
+    # 超时
+    def findCelebrity2(self, n: int) -> int:
+        def knows(a: int, b: int) -> bool:
+            return True
+
+        inDeg = [0] * n
+        outDeg = [0] * n
+        for i in range(n):
+            for j in range(n):
+                if i == j:
+                    continue
+                if knows(i, j):
+                    inDeg[j] += 1
+                    outDeg[i] += 1
+        for i in range(n):
+            if inDeg[i] == n - 1 and outDeg[i] == 0:
+                return i
+        return -1
