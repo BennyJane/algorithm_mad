@@ -1,3 +1,4 @@
+from bisect import bisect_right
 from typing import List
 
 
@@ -56,37 +57,22 @@ class Solution3:
 
 
 class Solution4:
-
     def kIncreasing(self, arr: List[int], k: int) -> int:
         n = len(arr)
-        if n == 0 or k == 0:
-            return 0
-        dp = [0] * n
-        for i in range(k, n):
-            if arr[i] >= arr[i - k]:
-                dp[i] = dp[i - 1]
-            else:
-                dp[i] = min(dp[i - 1], dp[i - 1] + 1)
-        cnt = max(dp)
-        return cnt
-
-    def kIncreasing1(self, arr: List[int], k: int) -> int:
-        n = len(arr)
-        if n == 0 or k == 0:
-            return 0
-        ori = list(arr)
-        cnt = 0
-        for i in range(n - k):
-            temp = 0
-            l = [arr[i]]
-            for j in range(i + k, n, k):
-                if arr[j] >= l[-1]:
-                    l.append(arr[j])
-                    temp += 1
-            print(l)
-            print(cnt, temp)
-            cnt = max(cnt, temp)
-        return
+        ans = 0
+        for i in range(k):
+            f = list()
+            j, length = i, 0
+            while j < n:
+                length += 1
+                it = bisect_right(f, arr[j])
+                if it == len(f):
+                    f.append(arr[j])
+                else:
+                    f[it] = arr[j]
+                j += k
+            ans += length - len(f)
+        return ans
 
 
 """
