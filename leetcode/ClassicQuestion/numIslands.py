@@ -736,7 +736,7 @@ class Solution13:
 
 
 # 277. 搜寻名人 MIDDLE
-class Solution:
+class Solution14:
 
     def findCelebrity(self, n: int) -> int:
         def knows(a: int, b: int) -> bool:
@@ -775,3 +775,64 @@ class Solution:
             if inDeg[i] == n - 1 and outDeg[i] == 0:
                 return i
         return -1
+
+
+# 317. 离建筑物最近的距离
+class Solution15:
+    """
+    简单问题：如何统计从单个建筑出发，可以到达的位置以及距离？ 存在不可达到的位置；
+    在计算出每个建筑可到到的位置以及距离后，统计全部建筑可以到达的位置，并计算距离和，取最小值
+    """
+
+    def shortestDistance(self, grid: List[List[int]]) -> int:
+        m, n = len(grid), len(grid[0])
+
+        sum_dist = [[0 for _ in range(n)] for _ in range(m)]
+        can_reach = [[0 for _ in range(n)] for _ in range(m)]
+
+        def startOne(x, y):
+            # 需要使用额外空间记录已访问位置，原数组需要重复使用，不能被修改
+            visited = [[False for _ in range(n)] for _ in range(m)]
+            visited[x][y] = True
+            queue = [(x, y)]
+            step = 0
+            while queue:
+                nxtQueue = list()
+                step += 1
+                for X, Y in queue:
+                    for nx, ny in [[X + 1, Y], [X - 1, Y], [X, Y + 1], [X, Y - 1]]:
+                        # 只处理可以到达的空地
+                        if 0 <= nx < m and 0 <= ny < n and grid[nx][ny] == 0:
+                            if visited[nx][ny]:
+                                continue
+                            nxtQueue.append((nx, ny))
+                            sum_dist[nx][ny] += step
+                            can_reach[nx][ny] += 1
+                            visited[nx][ny] = True
+                # FIXME 重置queue
+                queue = nxtQueue
+
+        total = 0
+        for i in range(m):
+            for j in range(n):
+                if grid[i][j] == 1:
+                    total += 1
+                    startOne(i, j)
+
+        ans = float("inf")
+        for i in range(m):
+            for j in range(n):
+                if can_reach[i][j] == total:
+                    ans = min(ans, sum_dist[i][j])
+
+        return ans if ans != float("inf") else -1
+
+
+# 296. 最佳的碰头地点
+class Solution16:
+    def minTotalDistance(self, grid: List[List[int]]) -> int:
+        pass
+
+
+if __name__ == '__main__':
+    pass
