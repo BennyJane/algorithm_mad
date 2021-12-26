@@ -829,9 +829,115 @@ class Solution15:
 
 
 # 296. 最佳的碰头地点
+"""
+有一队人（两人或以上）想要在一个地方碰面，他们希望能够最小化他们的总行走距离。
+
+给你一个 2D 网格，其中各个格子内的值要么是 0，要么是 1。
+
+1 表示某个人的家所处的位置。这里，我们将使用 曼哈顿距离 来计算，其中 distance(p1, p2) = |p2.x - p1.x| + |p2.y - p1.y|。
+
+示例：
+
+输入: 
+
+1 - 0 - 0 - 0 - 1
+|   |   |   |   |
+0 - 0 - 0 - 0 - 0
+|   |   |   |   |
+0 - 0 - 1 - 0 - 0
+
+输出: 6 
+
+解析: 给定的三个人分别住在(0,0)，(0,4) 和 (2,2):
+     (0,2) 是一个最佳的碰面点，其总行走距离为 2 + 2 + 2 = 6，最小，因此返回 6。
+
+"""
+
+
 class Solution16:
+
+    # 中位数： 即聚会点
     def minTotalDistance(self, grid: List[List[int]]) -> int:
-        pass
+        m, n = len(grid), len(grid[0])
+        rows, cols = [], []
+        for i in range(m):
+            for j in range(n):
+                if grid[i][j] == 1:
+                    rows.append(i)
+                    cols.append(j)
+
+        # rows 自然升序
+        cols.sort()  # 需要重新排序
+
+        def calDist(array):
+            total = 0
+            l, r = 0, len(array) - 1
+            while l < r:
+                total += abs(array[r] - array[l])
+                l += 1
+                r -= 1
+            return total
+
+        return calDist(rows) + calDist(cols)
+
+    # FIXME 超时
+    def minTotalDistance3(self, grid: List[List[int]]) -> int:
+        m, n = len(grid), len(grid[0])
+
+        sum_dist = [[0 for _ in range(n)] for _ in range(m)]
+
+        def startOne(x, y):
+            # 需要使用额外空间记录已访问位置，原数组需要重复使用，不能被修改
+            visited = [[False for _ in range(n)] for _ in range(m)]
+            visited[x][y] = True
+            queue = [(x, y)]
+            step = 0
+            while queue:
+                nxtQueue = list()
+                step += 1
+                for X, Y in queue:
+                    for nx, ny in [[X + 1, Y], [X - 1, Y], [X, Y + 1], [X, Y - 1]]:
+                        # 只处理可以到达的空地
+                        if 0 <= nx < m and 0 <= ny < n:
+                            if visited[nx][ny]:
+                                continue
+                            nxtQueue.append((nx, ny))
+                            sum_dist[nx][ny] += step
+                            visited[nx][ny] = True
+                queue = nxtQueue
+
+        for i in range(m):
+            for j in range(n):
+                if grid[i][j] == 1:
+                    startOne(i, j)
+
+        ans = float("inf")
+        for arr in sum_dist:
+            ans = min(ans, min(arr))
+        return ans if ans != float("inf") else -1
+
+    # FIXME 超时
+    def minTotalDistance2(self, grid: List[List[int]]) -> int:
+        m, n = len(grid), len(grid[0])
+
+        # 先统计所有人位置
+        array = []
+        for i in range(m):
+            for j in range(n):
+                if grid[i][j] == 1:
+                    array.append((i, j))
+
+        ans = float("inf")
+        # 每个人位置作为起点，计算到达其余点的距离
+        for i in range(m):
+            for j in range(n):
+                SUM = 0
+                for x, y in array:
+                    # 计算每个位置到所有人的距离
+                    SUM += abs(x - i) + abs(y - j)
+                ans = min(ans, SUM)
+
+        return ans
 
 
 if __name__ == '__main__':
