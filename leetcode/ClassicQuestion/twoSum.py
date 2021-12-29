@@ -1,9 +1,10 @@
 import math
+from heapq import heappop, heappush
 from typing import List
 from bisect import bisect_left, bisect
 from collections import defaultdict
-from sortedcontainers import SortedList
-from math import lcm
+from collections import Counter
+# from math import lcm
 
 # 剑指 Offer II 006. 排序数组中两个数字之和
 from leetcode.utils import TreeNode
@@ -356,7 +357,6 @@ class Solution21:
         return ans
 
 
-
 # 560.和为K的子数组 TODO 错误多次
 class Solution22:
     # 取值范围：有正有负; 子数组连续
@@ -508,35 +508,20 @@ class Solution25:
                 return i
         return -1
 
-    def nthUglyNumber3(self, n: int, a: int, b: int, c: int) -> int:
-        lab, lbc, lac, labc = lcm(a, b), lcm(b, c), lcm(a, c), lcm(a, b, c)
-
-        def countugly(x):
-            return x // a + x // b + x // c - x // lab - x // lbc - x // lac + x // labc
-
-        l, r = 1, min(min(a, b, c) * n, 2 * pow(10, 9))
-        while l < r:
-            m = (l + r) // 2
-            if countugly(m) < n:
-                l = m + 1
-            else:
-                r = m
-        return l
-
-    def nthUglyNumber4(self, n: int, a: int, b: int, c: int) -> int:
-        lab, lbc, lac, labc = lcm(a, b), lcm(b, c), lcm(a, c), lcm(a, b, c)
-
-        def countugly(x):
-            return x // a + x // b + x // c - x // lab - x // lbc - x // lac + x // labc
-
-        l, r = n // countugly(labc) * labc, (n // countugly(labc) + 1) * labc
-        while l < r:
-            m = (l + r) // 2
-            if countugly(m) < n:
-                l = m + 1
-            else:
-                r = m
-        return l
+    # def nthUglyNumber3(self, n: int, a: int, b: int, c: int) -> int:
+    #     lab, lbc, lac, labc = lcm(a, b), lcm(b, c), lcm(a, c), lcm(a, b, c)
+    #
+    #     def countugly(x):
+    #         return x // a + x // b + x // c - x // lab - x // lbc - x // lac + x // labc
+    #
+    #     l, r = 1, min(min(a, b, c) * n, 2 * pow(10, 9))
+    #     while l < r:
+    #         m = (l + r) // 2
+    #         if countugly(m) < n:
+    #             l = m + 1
+    #         else:
+    #             r = m
+    #     return l
 
     # 丑数II的思路 错误
     def nthUglyNumber2(self, n: int, a: int, b: int, c: int) -> int:
@@ -553,3 +538,121 @@ class Solution25:
                 heappush(array, minVal * c)
         return array[-1]
 
+
+# 1995. 统计特殊四元组
+class Solution26:
+    # 暴力求解
+    def countQuadruplets(self, nums: List[int]) -> int:
+        n = len(nums)
+
+        ans = 0
+        for i in range(n):
+            for j in range(i + 1, n):
+                for k in range(j + 1, n):
+                    cur = nums[i] + nums[j] + nums[k]
+                    for m in range(k + 1, n):
+                        if nums[m] == cur:
+                            ans += 1
+        return ans
+
+    def countQuadruplets2(self, nums: List[int]) -> int:
+        n = len(nums)
+        ans = 0
+        for a in range(n):
+            for b in range(a + 1, n):
+                for c in range(b + 1, n):
+                    for d in range(c + 1, n):
+                        if nums[a] + nums[b] + nums[c] == nums[d]:
+                            ans += 1
+        return ans
+
+    def countQuadruplets3(self, nums: List[int]) -> int:
+        """
+        使用哈希表记录数值个数，遍历顺序：从后往前遍历
+        """
+        n = len(nums)
+        ans = 0
+        cnt = Counter()
+        for c in range(n - 2, 1, -1):
+            cnt[nums[c + 1]] += 1
+            for a in range(c):
+                for b in range(a + 1, c):
+                    pre = nums[a] + nums[c] + nums[b]
+                    if pre in cnt:
+                        ans += cnt[pre]
+        return ans
+
+    def countQuadruplets4(self, nums: List[int]) -> int:
+        """
+        nums[a]+nums[b]=nums[d]−nums[c]
+        """
+        n = len(nums)
+        ans = 0
+        cnt = defaultdict(int)
+        for b in range(n - 3, 0, -1):
+            for d in range(b + 2, n):
+                diff = nums[d] - nums[b + 1]
+                cnt[diff] += 1
+            for a in range(b):
+                ans += cnt.get(nums[a] + nums[b])
+        return ans
+
+    # 递归 ==> TODO 考虑使用动态规划解决
+    def countQuadruplets5(self, nums: List[int]) -> int:
+        n = len(nums)
+        ans = 0
+
+        def dfs(index, S, cnt):
+            nonlocal ans
+            if index >= n:
+                return
+            if cnt == 3:
+                for i in range(index, n):
+                    if nums[i] == S:
+                        ans += 1
+                return
+            dfs(index + 1, S + nums[index], cnt + 1)
+            dfs(index + 1, S, cnt)
+
+        dfs(0, 0, 0)
+        return ans
+
+    def countQuadruplets6(self, nums: List[int]) -> int:
+        n = len(nums)
+        # 假设有三个背包
+        dp = [[[0 for _ in range(4)] for _ in range(110)] for _ in range(n + 1)]
+        # for a in range(n + 1):
+        #     dp.append(list())
+        #     for b in range(110):
+        #         dp[a] = ([0, 0, 0, 0])
+
+        dp[0][0][0] = 1
+        for i in range(1, n + 1):
+            cur = nums[i - 1]
+            for j in range(110):
+                for k in range(4):
+                    dp[i][j][k] += dp[i - 1][j][k]
+                    if j - cur >= 0 and k - 1 >= 0:
+                        # 新增一个值，填充一个背包
+                        dp[i][j][k] += dp[i - 1][j - cur][k - 1]
+        ans = 0
+        # 填满三个背包，且值在nums中的数量总和
+        for i in range(3, n):
+            ans += dp[i][nums[i]][3]
+        return ans
+
+    def countQuadruplets7(self, nums: List[int]) -> int:
+        n = len(nums)
+        dp = [[0 for _ in range(4)] for _ in range(110)]
+        dp[0][0] = 1
+
+        ans = 0
+        for i in range(1, n + 1):
+            cur = nums[i - 1]
+            # 统计三数和为cur的个数
+            ans += dp[cur][3]
+            for j in range(109, -1, -1):
+                for k in range(3, -1, -1):
+                    if j - cur >= 0 and k - 1 >= 0:
+                        dp[j][k] += dp[j - cur][k - 1]
+        return ans
