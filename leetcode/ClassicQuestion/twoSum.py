@@ -627,11 +627,12 @@ class Solution26:
         #         dp[a] = ([0, 0, 0, 0])
 
         dp[0][0][0] = 1
-        for i in range(1, n + 1):
+        for i in range(1, n + 1):  # 考虑物品范围
             cur = nums[i - 1]
-            for j in range(110):
-                for k in range(4):
+            for j in range(110):  # 背包价值
+                for k in range(4):  # 背包数量
                     dp[i][j][k] += dp[i - 1][j][k]
+                    # 满足装入背包的条件：可以装入背包
                     if j - cur >= 0 and k - 1 >= 0:
                         # 新增一个值，填充一个背包
                         dp[i][j][k] += dp[i - 1][j - cur][k - 1]
@@ -641,6 +642,7 @@ class Solution26:
             ans += dp[i][nums[i]][3]
         return ans
 
+    # 优化空间
     def countQuadruplets7(self, nums: List[int]) -> int:
         n = len(nums)
         dp = [[0 for _ in range(4)] for _ in range(110)]
