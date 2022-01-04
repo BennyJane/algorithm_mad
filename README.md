@@ -1,5 +1,5 @@
 # algorithm_mad
-算法题目解析：主要使用Python、go语言。
+算法题目解析：主要使用Python语言。
 
 
 # Contents
