@@ -49,3 +49,64 @@ class Solution1:
 
         dfs(d[n - 1], n - 1, k)
         return ans
+
+
+# 1971. 寻找图中是否存在路径
+class Solution2:
+    def validPath(self, n: int, edges: List[List[int]], start: int, end: int) -> bool:
+        p = [i for i in range(n)]
+
+        def get_root(node):
+            if p[node] == node:
+                return p[node]
+            p[node] = get_root(p[node])
+            return p[node]
+
+        def merge(a, b):
+            root_a, root_b = get_root(a), get_root(b)
+            if root_a != root_b:
+                p[root_a] = root_b
+
+        for a, b in edges:
+            merge(a, b)
+        return get_root(start) == get_root(end)
+
+    def validPath2(self, n: int, edges: List[List[int]], start: int, end: int) -> bool:
+        if start == end:
+            return True
+        d = defaultdict(list)
+        for s, e in edges:
+            d[s].append(e)
+            d[e].append(s)
+
+        q = list(d[start])
+        visited = [False] * n
+        while q:
+            size = len(q)
+            temp = list()
+            for i in range(size):
+                cur = q[i]
+                visited[cur] = True
+                if cur == end:
+                    return True
+                for nxt in d[cur]:
+                    if not visited[nxt]:
+                        temp.append(nxt)
+            q = temp
+        return False
+
+
+# 1791. 找出星型图的中心节点
+class Solution3:
+    def findCenter(self, edges: List[List[int]]) -> int:
+        d = defaultdict(int)
+        n = len(edges) + 1
+        for s, e in edges:
+            d[s] += 1
+            d[e] += 1
+            if d[s] == n - 1:
+                return s
+            if d[e] == n - 1:
+                return e
+
+        return 0
