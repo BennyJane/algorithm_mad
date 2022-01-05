@@ -77,7 +77,7 @@ class Solution:
                         q.append(node)
         return True
 
-
+# 210. 课程表 II
 class Solution1:
     def findOrder(self, numCourses: int, prerequisites: List[List[int]]) -> List[int]:
         # 存储有向图
@@ -154,3 +154,62 @@ class Solution1:
         # 如果没有环，那么就有拓扑排序
         # 注意下标 0 为栈底，因此需要将数组反序输出
         return result[::-1]
+
+
+# 743. 网络延迟时间
+class Solution2:
+    def networkDelayTime(self, times: List[List[int]], n: int, k: int) -> int:
+        # FIXME 索引从1开始
+        graph = defaultdict(list)
+        # 描述入度: 从入度为0的叶子节点开出遍历
+        out_degree = [0] * (n + 1)
+        for s, e, w in times:
+            graph[s].append((s, e, w))
+            out_degree[e] += 1
+
+        # 记录每个节点的最小耗时
+        dp = [float("inf")] * (n + 1)
+        dp[k] = 0
+        q = deque(graph[k])
+        while q:
+            start, end, time = q.popleft()
+            # 剪枝操作：耗时过长，直接跳过
+            if dp[start] + time > dp[end]:
+                continue
+            dp[end] = dp[start] + time
+            out_degree[end] -= 1
+            for arr in graph[end]:
+                nxt = arr[1]
+                # FIXME 下个节点出度不会0，存在子节点，就需要继续往后遍历
+                if out_degree[nxt] > 0:
+                    q.append(arr)
+        ans = -1
+        for i in range(1, n + 1):
+            t = dp[i]
+            if t == float("inf") and i != k:
+                return -1
+            ans = max(ans, t)
+        return ans
+
+    # 最短路径算法
+    def networkDelayTime2(self, times: List[List[int]], n: int, k: int) -> int:
+        g = [[float('inf')] * n for _ in range(n)]
+        for x, y, time in times:
+            g[x - 1][y - 1] = time
+
+        dist = [float('inf')] * n
+        dist[k - 1] = 0
+        # FIXME k -1 位置并没有在此时更新为True
+        used = [False] * n
+        for _ in range(n):
+            # TODO 核心：寻找距离x最近的 未确定 且 距离耗时最短的 节点
+            x = -1
+            for y, u in enumerate(used):
+                if not u and (x == -1 or dist[y] < dist[x]):
+                    x = y
+            used[x] = True
+            for y, time in enumerate(g[x]):
+                dist[y] = min(dist[y], dist[x] + time)
+
+        ans = max(dist)
+        return ans if ans < float('inf') else -1
