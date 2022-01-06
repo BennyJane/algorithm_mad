@@ -191,6 +191,8 @@ class Solution2:
             ans = max(ans, t)
         return ans
 
+
+
     # 最短路径算法
     def networkDelayTime2(self, times: List[List[int]], n: int, k: int) -> int:
         g = [[float('inf')] * n for _ in range(n)]
