@@ -1,3 +1,6 @@
+from typing import List
+
+
 class Solution1:
     # 29. 两数相除
     # https://leetcode-cn.com/problems/divide-two-integers/
@@ -70,3 +73,22 @@ class Solution1:
                     right = mid - 1
 
             return -ans if rev else ans
+
+
+# 89. 格雷编码
+class Solution2:
+    # 对称生成
+    def grayCode(self, n: int) -> List[int]:
+        ans = [0]
+        for i in range(1, n + 1):
+            size = len(ans)
+            for j in range(size - 1, -1, -1):
+                ans.append(ans[j] | (1 << (i - 1)))
+        return ans
+
+    # 公式法： 第n个格雷码 G(n) = n xor (n>>1)
+    def grayCode2(self, n: int) -> List[int]:
+        ans = [0] * (1 << n)
+        for i in range(1 << n):
+            ans[i] = (i >> 1) ^ i
+        return ans
