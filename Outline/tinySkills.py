@@ -41,6 +41,7 @@ children([1, 2, 3])
 --------------------------------------
 """
 
+
 def findTwoNum(nums1: List[int], nums2: List[int], target: int):
     left = 0
     right = len(nums2) - 1
@@ -60,9 +61,35 @@ def findTwoNum(nums1: List[int], nums2: List[int], target: int):
 res = findTwoNum([1, 2, 4, 3, ], [1, 4, 5, 3], 6)
 logging.info(res)
 
-
 """
 --------------------------------------
 判断是否为质数
 --------------------------------------
 """
+
+"""
+--------------------------------------
+计算矩阵的前缀和
+--------------------------------------
+"""
+
+
+def get_prefix_sum():
+    grid: List[List[int]] = [[1, 0, 0, 0], [1, 0, 0, 0], [1, 0, 0, 0], [1, 0, 0, 0], [1, 0, 0, 0]]
+    m, n = len(grid), len(grid[0])
+    pre = [[0] * (n + 1) for _ in range(m + 1)]
+
+    # 方法1
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            pre[i][j] = pre[i][j - 1] + pre[i - 1][j] - pre[i - 1][j - 1] + grid[i - 1][j - 1]
+
+    pre2 = [[0] * (n + 1) for _ in range(m + 1)]
+    # 先计算每行的前缀和
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            pre2[i][j] = pre2[i][j - 1] + grid[i - 1][j - 1]
+    # 再计算每列的累加和
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            pre2[i][j] += pre2[i - 1][j]
