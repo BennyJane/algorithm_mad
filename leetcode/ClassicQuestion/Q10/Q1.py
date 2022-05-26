@@ -63,5 +63,4 @@ class Solution2:
                 index += 2
             else:
                 index += gap
-
         return ans

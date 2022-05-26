@@ -19,23 +19,40 @@ def Solution(guess_list):
     # 获取所有可能的4位数字
     origin = []
     for i in range(9999):
-        if i <= 999:    # 包含 999； 需要前置位置补0
+        if i <= 999:  # 包含 999； 需要前置位置补0
             prefix = "0" * (_len - len(str(i)))
             origin.append(f"{prefix}{i}")
         else:
             origin.append(str(i))
 
-    def analyse(secret, guess):
+    # 计算任意两个数值的XAYB表达式
+    def analyse(ori, other):
         # 计算位置与数值都正确的数值
         # a = sum([secret[i] == guess[i] for i in range(_len)]) # 等效写法
-        a = sum([s == g for s, g in zip(secret, guess)])
+        a = sum([s == g for s, g in zip(ori, other)])
         b = -1 * a  # 先去除 位置与数值都正确的情况
-        l = list(secret)  # 不可变对象（字符串） ==》 转为可变对象（列表）
-        for n in guess:
+        l = list(ori)  # 不可变对象（字符串） ==》 转为可变对象（列表）
+        for n in other:
             if n in l:
                 l.remove(n)
                 b += 1
         return f"{a}A{b}B"
+
+    def getHint(num, other):
+        arr1 = [int(c) for c in num]
+        arr2 = [int(c) for c in other]
+
+        same = 0
+        cnt1 = [0] * 10
+        cnt2 = [0] * 10
+        for a, b in zip(arr1, arr2):
+            if a == b:
+                same += 1
+            else:
+                cnt1[a] += 1
+                cnt2[b] += 1
+        diff = sum([min(a, b) for a, b in zip(cnt1, cnt2)])
+        return f"{same}A{diff}B"
 
     def _filter(guess, result, data):
         # 获取满足条件的数值

@@ -31,43 +31,45 @@ def Solution2(s: str):
         return len(s)
     left = 0
     for word in s:
-        if word == 'o':
-            left += 1
-            break
         left += 1
+        if word == 'o':
+            break
 
     right = 0
     for index in range(len(s) - 1, -1, -1):
-        if s[index] == 'o':
-            right += 1
-            break
         right += 1
+        if s[index] == 'o':
+            break
     _min = min(left, right)
     return len(s) - _min
 
 
 def Solution3(s: str):
-    _count = s.count("o")
-    if _count % 2 == 0:
+    cnt = s.count("o")
+    # 0 或 偶数 都可以直接返回
+    if cnt % 2 == 0:
         return len(s)
     l = s.split("o")
     # print(l)
+    # 直接删除 最左侧的o以及左侧的字符串、或者最右侧o及右侧字符串
+    # Java中 s.index("0")  s.lastIndex("0")
     _min = min(len(l[0]), len(l[-1]))
     return len(s) - _min - 1
 
 
 if __name__ == '__main__':
-    s = "alolobo"
+    s = "ooaloloskdjlo"
     print(Solution(s))
+    print(Solution2(s))
 
     s = "ooaloloskdjlo"
-    print(Solution(s), "[第三种解法]", Solution3(s))
+    print(Solution(s), "[01]", Solution3(s))
 
     s = "ooaloloskdjlo"
-    print(Solution2(s), "[第三种解法]", Solution3(s))
+    print(Solution2(s), "[02]", Solution3(s))
 
     s = "aloloskdjlo"
-    print(Solution2(s), "[第三种解法]", Solution3(s))
+    print(Solution2(s), "[03]", Solution3(s))
 
     s = "aloloskdjloo"
-    print(Solution2(s), "[第三种解法]", Solution3(s))
+    print(Solution2(s), "[04]", Solution3(s))

@@ -40,9 +40,24 @@ def Solution2(end: int):
     return end - skip
 
 
+def Solution3(end: int):
+    cur_num = 0
+    real_cost = 0
+    while cur_num < end:
+        cur_num += 1
+        real_cost += 1
+        cur_num_str = str(cur_num)
+        if "4" in cur_num_str:
+            num = str(cur_num).replace("4", "5")
+            cur_num = int(num)
+    return real_cost
+
+
 if __name__ == '__main__':
     s1 = 5
     print(Solution(s1))
+    print(Solution3(s1))
 
     s1 = 25
     print(Solution(s1))
+    print(Solution3(s1))

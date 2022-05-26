@@ -47,9 +47,11 @@ def Solution2():
     print("_count", _count)
     type_nums = len(_count)
     for c in _count:
+        if k >= c:
+            type_nums -= 1
         k -= c
         if k <= 0:
-            type_nums -= 1
+            break
     return type_nums
 
 

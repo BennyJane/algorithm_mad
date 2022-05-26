@@ -30,6 +30,16 @@ def Solution(ori, e=None):
     return square
 
 
+def Solution2(moves, end):
+    array = [0] * end
+    y = 0
+    for i in range(end):
+        y = y + moves.get(i, 0)
+        array[i] = y
+
+    return sum([abs(c) for c in array])
+
+
 if __name__ == '__main__':
     s = {
         1: 1,
@@ -38,6 +48,7 @@ if __name__ == '__main__':
         4: -2,
     }
     print(Solution(s, e=10))
+    print(Solution2(s, 10))
 
     s = {
         1: 1,
@@ -47,3 +58,4 @@ if __name__ == '__main__':
         6: 4,
     }
     print(Solution(s, e=10))
+    print(Solution2(s, 10))

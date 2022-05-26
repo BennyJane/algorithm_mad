@@ -21,8 +21,8 @@ def Solution(s: str):
             d[w] += 1
 
     def key_f(value):
-        c = value[1]
         word = value[0]
+        c = value[1]
         sort_keys = (c, word.islower())
         # sort_keys = (c, word.islower(), word) # 加入按照字母排序
         # print(sort_keys)

@@ -47,29 +47,29 @@ def Solution2(s: str):
 def Solution3(s: str):
     l = list(map(int, s.split()))
     n = len(l)  # N
-    _count = sum(l)
+    cnt = sum(l)
     d = [0 for _ in range(n)]  # 记录每个位置喊 过 的次数
 
     start = 1
-    cur_count = 0
-    while cur_count < _count:   # 出现的次数为限制条件
+    while cnt > 0:  # 出现的次数为限制条件
         if start % 7 == 0 or '7' in str(start):
-            index = start % n - 1   # FIXME 数值转列表索引需要减去1
+            index = start % n - 1  # FIXME 数值转列表索引需要减去1
             d[index] += 1
-            cur_count += 1
+            cnt -= 1
         start += 1
     return " ".join(map(str, d))
 
 
 if __name__ == '__main__':
-    ori = '0 1 0'
-    ori = '0 1 1'
-    print(Solution(ori))
+    # ori = '0 1 0'
+    # ori = '0 1 1'
+    # print(Solution(ori))
+    #
+    # ori2 = '0 1 1'
+    # print(Solution2(ori2))
+    # ori2 = '0 1 2'
+    # print(Solution2(ori2))
 
-    ori2 = '0 1 1'
-    print(Solution2(ori2))
-    ori2 = '0 1 2'
-    print(Solution2(ori2))
-
-    ori2 = '0 1 2'
+    # ori2 = '0 1 2'
+    ori2 = '1 0 0'
     print(Solution3(ori2))
