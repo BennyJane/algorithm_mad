@@ -236,7 +236,8 @@ def solution12_2(n, k):
         array.remove(target)
         ans.append(str(target))
 
-        k -= index * factorial(cnt)
+        # k -= index * factorial(cnt)
+        k %= factorial(cnt)
         cnt -= 1
 
     return "".join(ans)
@@ -309,17 +310,43 @@ def solution15_2(n):
 
 
 # 15、高矮个子排队
-# 贪心思想：遍历奇数位置，当不满足>=两侧数值时，取两者中较大的值
+# TODO 贪心思想：遍历奇数位置，当不满足>=两侧数值时，取两者中较大的值
 def solution15_3(s):
     array = list(map(int, s.split(" ")))
     n = len(array)
-    for i in range(n):
+    count = 0
+    for i in range(n - 1):
         if i % 2 == 0:
             if array[i] < array[i + 1]:
                 array[i], array[i + 1] = array[i + 1], array[i]
+                count += 1
         else:
-            if array[i] > array[i+1]:
+            if array[i] > array[i + 1]:
                 array[i], array[i + 1] = array[i + 1], array[i]
+                count += 1
+    print(array)
+    return count
+
+
+def solution15_4(s):
+    array = list(map(int, s.split(" ")))
+    n = len(array)
+    count = 0
+    for i in range(1, n, 2):
+        pre = array[i - 1]
+        cur = array[i]
+        back = array[i + 1] if i + 1 < n else max(pre + 1, cur + 1)
+        # if pre <= cur and cur >= back:
+        #     continue
+        if pre >= cur and cur <= back:
+            continue
+        count += 1
+        if pre <= back:
+            array[i], array[i - 1] = pre, cur
+        else:
+            array[i], array[i + 1] = back, cur
+    print(array)
+    return count
 
 
 # 16、工号不够用了怎么办？
@@ -561,22 +588,36 @@ if __name__ == '__main__':
     #
     # print(solution12(0, 6, "word dd da dc dword d"))
     #
-    # print(solution12_2(3, 3))
+    print(solution12_2(3, 3))
     #
     # print(solution14("abc2234019A334bc"))
     #
     # print(solution15(15))
     # print(solution15_2(15))
 
-    print(solution34("64:2,128:1,32:4,1:128", "50,36,64,128,127"))
-    print(solution34("64:2,128:1,32:4,1:128", "50,36,64,128,127"))
-
-    print(solution25(4, 4, "0 0", "3 3"))
-
-    print(solution24("2 7 3 0"))
-    print(solution24("1 1 1"))
-
-    print(solution21("7#6$5#12"))
-
-    print(solution19(50))
+    # print(solution34("64:2,128:1,32:4,1:128", "50,36,64,128,127"))
+    # print(solution34("64:2,128:1,32:4,1:128", "50,36,64,128,127"))
+    #
+    # print(solution25(4, 4, "0 0", "3 3"))
+    #
+    # print(solution24("2 7 3 0"))
+    # print(solution24("1 1 1"))
+    #
+    # print(solution21("7#6$5#12"))
+    #
+    # print(solution19(50))
+    #
+    # print(solution15_3("5 3 1 2 3"))
+    # print(solution15_3("4 3 5 7 2"))
+    #
+    # print(solution15_4("5 3 1 2 3"))
+    # print(solution15_4("1 1 1 1 1"))
+    # print(solution15_4("4 3 5 7 8"))
+    # print(solution15_4("4 3 5 7"))
+    # print(solution15_4("4 3 5 7 2 1"))
+    #
+    # print(solution15_4("4 1 5 7 2 3"))
+    #
+    # print(solution15_4("5 4 3 7 2"))
+    # print(solution15_4("4 3 5 7 6"))
     pass

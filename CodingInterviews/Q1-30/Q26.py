@@ -8,6 +8,7 @@
 - 利用横坐标分割多个区间，然后计算每个区间的面积
 =================================================================================
 """
+import math
 
 
 def Solution(ori, e=None):
@@ -40,6 +41,20 @@ def Solution2(moves, end):
     return sum([abs(c) for c in array])
 
 
+def Solution3(moves, end):
+    pre_x, pre_y, area = 0, 0, 0
+
+    for x, y in moves.items():
+        area += (x - pre_x) * abs(pre_y)
+
+        pre_x = x
+        pre_y += y
+
+    # 处理末尾
+    area += (end - pre_x) * abs(pre_y)
+    return area
+
+
 if __name__ == '__main__':
     s = {
         1: 1,
@@ -59,3 +74,5 @@ if __name__ == '__main__':
     }
     print(Solution(s, e=10))
     print(Solution2(s, 10))
+
+    print(Solution3(s, end=10))
