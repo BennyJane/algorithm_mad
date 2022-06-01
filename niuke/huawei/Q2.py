@@ -1,7 +1,7 @@
-# 1、5键键盘的输出
 from collections import defaultdict
 
 
+# 1、5键键盘的输出
 def solution1(s):
     s = s.replace(" ", "")
     # 面板上字符数量
